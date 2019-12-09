@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <UserSecretsId>80cc89de-5713-4f18-b091-877c8d53ed40</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.4.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProductCatalog.Application\ProductCatalog.Application.csproj" />
+    <ProjectReference Include="..\ProductCatalog.Core\ProductCatalog.Core.csproj" />
+    <ProjectReference Include="..\ProductCatalog.EFCore\ProductCatalog.EFCore.csproj" />
+    <ProjectReference Include="..\Sup.Framework\Sup.Framework.csproj" />
+  </ItemGroup>
+
+</Project>
