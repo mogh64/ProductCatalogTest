@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Sup.Framework.Base.Extensions;
 using Sup.Framework.Domain.Auditing;
+using Sup.Framework.Domain.Validation;
+using Sup.Framework.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +55,13 @@ namespace Sup.Framework.EntityFramework
                 case EntityState.Deleted:
                    
                     break;
+            }
+            if (entry.Entity is IObjectValidator)
+            {
+                if(!entry.Entity.As<IObjectValidator>().IsValid())
+                {
+                    throw new ObjectNotValidException("Object is not valid!");
+                }
             }
         }
         protected virtual void ApplyPreEditChanges(EntityEntry entry)
