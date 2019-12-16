@@ -9,8 +9,6 @@ namespace ProductCatalog.Core.Products
     {
         public string MimeType { get; set; }
 
-        
-
         /// <summary>
         /// Gets or sets the "alt" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name)
         /// </summary>

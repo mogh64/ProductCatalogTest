@@ -11,8 +11,7 @@ namespace ProductCatalog.Core.Products
     {
         public long Code { get; set; }
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string Photo { get; set; }        
+        public decimal Price { get; set; }       
         public bool Confirmed { get; set; } = false;
         public DateTime? LastUpdateTime { get; set ; }
         public byte[] RowVersion { get; set; }
@@ -21,8 +20,13 @@ namespace ProductCatalog.Core.Products
         {
             if (Price <= 0)
                 return false;
-            if (Price > 999 && !Confirmed)
-                return false;
+            if (Price > 999)
+            {
+                if (!Confirmed)
+                {
+                    return false;
+                }
+            }                
             return true;
         }
     }

@@ -1,7 +1,7 @@
-﻿using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Castle.Windsor.MsDependencyInjection;
+﻿using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Sup.Framework.Base;
 using Sup.Framework.Dependency;
 using System;
@@ -14,19 +14,28 @@ namespace ProductCatalog.Web.DependencyConfiguration
 {
     public class ServiceResolver
     {
-        private static WindsorContainer container;
+        private static IContainer container;
         private static IServiceProvider serviceProvider;
-        private IConventionalDependencyRegistrar dependencyRegistrar;
+        private ConventionalDependencyRegistrar dependencyRegistrar;
 
 
         public ServiceResolver(IServiceCollection services)
         {
-            container = new WindsorContainer();
+            var builder = new ContainerBuilder();
+            
+            builder.Populate(services);
+            
             this.dependencyRegistrar = new ConventionalDependencyRegistrar();
             //Register your components in container
-            this.dependencyRegistrar.RegisterAssemblies(container, ProjectHelper.GetAssemblyNames(Constants.ProjectName));
+            this.dependencyRegistrar.RegisterAssemblies(builder, ProjectHelper.GetAssemblyNames(Constants.ProjectName));
+            this.dependencyRegistrar.RegisterAssemblies(builder, new string[] { "Sup.Framework" });
+
+
+
+            container = builder.Build();
+            builder.RegisterInstance<IContainer>(container);
             //then
-            serviceProvider = WindsorRegistrationHelper.CreateServiceProvider(container, services);
+            serviceProvider = new AutofacServiceProvider(container);
         }
 
         public IServiceProvider GetServiceProvider()

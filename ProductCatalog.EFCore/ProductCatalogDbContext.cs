@@ -10,6 +10,8 @@ namespace ProductCatalog.EFCore
     public class ProductCatalogDbContext: CustomDbContext
     {
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<ProductPhoto> ProductPhotos { get; set; }
+        public virtual DbSet<Photo> Photos { get; set; }
         public ProductCatalogDbContext(DbContextOptions<ProductCatalogDbContext> options)
            : base(options)
         {

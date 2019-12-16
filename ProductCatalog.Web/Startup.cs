@@ -2,27 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Windsor;
-using Castle.Windsor.MsDependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ProductCatalog.Core.Products;
 using ProductCatalog.EFCore;
+using ProductCatalog.EFCore.Repositories;
 using ProductCatalog.Web.DependencyConfiguration;
+using Sup.Framework.Base;
+using Sup.Framework.Base.Extensions;
+using Sup.Framework.Middlewares;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProductCatalog.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private const string DefaultCorsPolicyName = "localhost";
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            StaticConsts.CurrentDirectory = env.ContentRootPath;
         }
 
         public IConfiguration Configuration { get; }
@@ -32,8 +39,36 @@ namespace ProductCatalog.Web
         {
             services.AddDbContext<ProductCatalogDbContext>(options=> {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            },ServiceLifetime.Scoped);
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddAutoMapper(System.Reflection.Assembly.Load(Constants.ProjectName + "." + "Application"));
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory(DefaultCorsPolicyName));
+            }                         
+                ).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(DefaultCorsPolicyName, builder =>
+                {
+                    //App:CorsOrigins in appsettings.json can contain more than one address with splitted by comma.
+                    builder
+                        .WithOrigins(
+                            // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
+                            Configuration["App:CorsOrigins"]
+                                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(o => o.RemovePostFix("/"))
+                                .ToArray()
+                        )
+                        .SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
             });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddSwaggerGen(c =>
             {
                 
@@ -60,7 +95,8 @@ namespace ProductCatalog.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseCors(DefaultCorsPolicyName);
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseMvc();
 
             app.UseSwagger();

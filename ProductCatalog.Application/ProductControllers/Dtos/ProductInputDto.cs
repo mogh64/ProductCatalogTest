@@ -12,6 +12,6 @@ namespace ProductCatalog.Application.ProductControllers.Dtos
         public string Name { get; set; }
         public decimal Price { get; set; }                
         public bool Confirmed { get; set; } = false;
-        public string Photo { get; set; }
+        public byte[] RowVersion { get; set; }
     }
 }

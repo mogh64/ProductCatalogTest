@@ -47,9 +47,10 @@ namespace Sup.Framework.EntityFramework
             switch (entry.State)
             {
                 case EntityState.Added:
-                    
+                    ApplyPreEditChanges(entry);
                     break;
                 case EntityState.Modified:
+                    
                     ApplyPreEditChanges(entry);
                     break;
                 case EntityState.Deleted:

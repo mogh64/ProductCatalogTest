@@ -27,7 +27,7 @@ namespace ProductCatalog.EFCore.Repositories
         {
            var entity = await this.dbContext.Products.FindAsync(id);
             this.dbContext.Remove(entity);
-
+            await this.dbContext.SaveChangesAsync();
         }
 
         public Task<Product> FirstOrDefaultAsync(int id)
@@ -69,7 +69,17 @@ namespace ProductCatalog.EFCore.Repositories
 
         public async Task<Product> UpdateAsync(Product entity)
         {
-            this.dbContext.Entry(entity).State = EntityState.Modified;
+            var local = dbContext.Set<Product>()
+                                    .Local
+                                  .FirstOrDefault(entry => entry.Id.Equals(entity.Id));
+
+            // check if local is not null 
+            if (local != null)
+            {
+                // detach
+                dbContext.Entry(local).State = EntityState.Detached;
+            }
+            this.dbContext.Set<Product>().Update(entity);
             await this.dbContext.SaveChangesAsync();
             return entity;
         }

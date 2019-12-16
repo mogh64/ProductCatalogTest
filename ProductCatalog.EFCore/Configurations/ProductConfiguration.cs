@@ -13,7 +13,7 @@ namespace ProductCatalog.EFCore.Configurations
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.ToTable("Product", Schema.Catalog);
-            builder.HasIndex(x => x.Code);
+            builder.HasIndex(x => x.Code).IsUnique();
             builder.Property(p => p.RowVersion).IsRowVersion();
         }
     }

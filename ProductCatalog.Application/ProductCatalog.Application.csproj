@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ProductCatalog.Core\ProductCatalog.Core.csproj" />
+    <ProjectReference Include="..\Sup.Framework.Tools\Sup.Framework.Tools.csproj" />
     <ProjectReference Include="..\Sup.Framework\Sup.Framework.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using Sup.Framework.Domain.Repository;
+﻿using Sup.Framework.Dependency;
+using Sup.Framework.Domain.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
