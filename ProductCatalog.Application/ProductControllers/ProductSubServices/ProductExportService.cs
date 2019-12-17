@@ -39,8 +39,14 @@ namespace ProductCatalog.Application.ProductControllers.ProductSubServices
                 result.Add(productMapperService.MapToDto(x));
             });
             ProductExportListDto productExportListDto = new ProductExportListDto(result);
-            ExcelExportBuilder excelExportBuilder = new ExcelExportBuilder();            
-            return await excelExportBuilder.CreateExcelExport(productExportListDto.GetExcelExportInputDto());
+            ExcelExportBuilder excelExportBuilder = new ExcelExportBuilder();
+            var excelResult = await excelExportBuilder.CreateExcelExport(productExportListDto.GetExcelExportInputDto());
+            return return new ExcelExportOutputDto()
+            {
+                Data = excelResult.Data,
+                Extension = "application/vnd.ms-excel",
+                Name = excelResult.Name + excelResult.Extension
+            };
         }
     }
 }
