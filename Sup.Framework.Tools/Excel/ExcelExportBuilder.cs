@@ -18,17 +18,18 @@ namespace Sup.Framework.Tools.Excel
                  using (ExcelPackage excelPackage = new ExcelPackage())
                  {
                      ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
-
+                     string start="A1";
                      if (inputDto.MasterDataTable != null)
                      {
                          worksheet.Cells["A1"].LoadFromDataTable(inputDto.MasterDataTable, true);
+                         start="A3";
                      }
-                     worksheet.Cells["A3"].LoadFromDataTable(inputDto.DataTable, true);
-                     int rows=  worksheet.Cells["A3"].Rows;
-                     int startRow = worksheet.Cells["A3"].Start.Row;
+                     worksheet.Cells[start].LoadFromDataTable(inputDto.DataTable, true);
+                     int rows=  worksheet.Cells[start].Rows;
+                     int startRow = worksheet.Cells[start].Start.Row;
                      worksheet.DefaultColWidth = 30;
                      
-                     worksheet.View.RightToLeft = true;
+                     worksheet.View.RightToLeft = false;
                      worksheet.View.ShowHeaders = true;
 
                      foreach (var metaData in inputDto.MetaDatas)
