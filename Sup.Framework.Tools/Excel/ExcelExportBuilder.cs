@@ -44,11 +44,12 @@ namespace Sup.Framework.Tools.Excel
                          }
                      }
                      byte[] byteData = excelPackage.GetAsByteArray();
+
                      return new ExcelExportOutputDto()
                      {
                          Data = Convert.ToBase64String(byteData),
-                         Extension = ".xlsx",
-                         Name = String.IsNullOrWhiteSpace(inputDto.Title) ? "excelOutputResult" : inputDto.Title
+                         Extension = ExcelConsts.Mime,
+                         Name = String.IsNullOrWhiteSpace(inputDto.Title) ? "excelOutputResult" : inputDto.Title + ExcelConsts.XLSX
                      };
                  }
 
